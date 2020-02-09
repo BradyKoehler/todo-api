@@ -1,9 +1,10 @@
 class Api::V1::UsersController < ApplicationController
   before_action :find_user, only: %i[show update destroy]
-  before_action :authenticated?, only: %i[update destroy]
+  before_action :authenticated?, except: :create
 
   # GET /users/1
   def show
+    head :not_found and return if @user.id != current_user.id
     render json: @user
   end
 
@@ -47,6 +48,6 @@ class Api::V1::UsersController < ApplicationController
 
   # Ensure client is authenticated
   def authenticated?
-    head :forbidden unless @user.id == current_user&.id
+    head :forbidden unless self.current_user
   end
 end

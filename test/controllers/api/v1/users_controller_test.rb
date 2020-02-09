@@ -25,15 +25,29 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  ### READ
+  ### SHOW
 
   test "should show user" do
-    get api_v1_user_url(@user), as: :json
+    get api_v1_user_url(@user),
+      headers: { Authorization: JsonWebToken.encode(user_id: @user.id) }, 
+      as: :json
     assert_response :success
 
     # Test to ensure response contains the correct email
     json_response = JSON.parse(self.response.body)
     assert_equal @user.email, json_response['email']
+  end
+
+  test "should not show other users" do
+    get api_v1_user_url(@user),
+      headers: { Authorization: JsonWebToken.encode(user_id: users(:two).id) }, 
+      as: :json
+    assert_response :not_found
+  end
+
+  test "should not show user data to unauthorized users" do
+    get api_v1_user_url(@user), as: :json
+    assert_response :forbidden
   end
 
   ### UPDATE
