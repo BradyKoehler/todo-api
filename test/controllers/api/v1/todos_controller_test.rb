@@ -15,7 +15,7 @@ class Api::V1::TodosControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     json_response = JSON.parse(self.response.body)
-    assert_equal 2, json_response.length
+    assert_equal 1, json_response.length
   end
 
   test "should not show todos for unauthenticated user" do

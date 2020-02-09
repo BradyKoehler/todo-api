@@ -5,7 +5,7 @@ class Api::V1::TodosController < ApplicationController
 
   # GET /lists/1/todos
   def index
-    render json: self.current_user.todos
+    render json: @list.todos
   end
 
   # POST /lists/1/todos
