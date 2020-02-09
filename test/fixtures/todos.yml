@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: First Task
+  status: 0
+  list: one
+
+two:
+  title: Second Task
+  status: 0
+  list: two

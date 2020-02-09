@@ -8,7 +8,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
   ### CREATE
 
   test "should create user" do
-    assert_difference('User.count') do
+    assert_difference("User.count") do
       post api_v1_users_url, 
         params: { user: { email: 'test@bradykoehler.com', password: '123456' } }, 
         as: :json
@@ -17,7 +17,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create user with taken email" do
-    assert_no_difference('User.count') do
+    assert_no_difference("User.count") do
       post api_v1_users_url, 
         params: { user: { email: @user.email, password: '123456' } }, 
         as: :json
@@ -64,7 +64,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
   ### DESTROY
 
   test "should destroy user" do
-    assert_difference('User.count', -1) do
+    assert_difference("User.count", -1) do
       delete api_v1_user_url(@user), 
         headers: { Authorization: JsonWebToken.encode(user_id: @user.id) },
         as: :json
@@ -72,8 +72,14 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :no_content
   end
 
+  test "destroy user should destroy linked lists" do
+    assert_difference("List.count", -2) do
+      users(:one).destroy
+    end
+  end
+
   test "should forbid destroy user" do
-    assert_no_difference('User.count') do
+    assert_no_difference("User.count") do
       delete api_v1_user_url(@user), as: :json
     end
     assert_response :forbidden
